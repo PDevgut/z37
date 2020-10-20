@@ -11,14 +11,6 @@ def application(environ, start_response):
         payload = read_from_styles_css()
         start_response(status, list(headers.items()))
         yield payload
-        if url == "/imggg":
-            status = "200 OK"
-            headers = {
-                "Content-type": "image/jpg"
-            }
-            payload = read_from_bg_img()
-            start_response(status, list(headers.items()))
-            yield payload
     else:
         status = "200 OK"
         headers = {
