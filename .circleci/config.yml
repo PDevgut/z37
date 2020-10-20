@@ -56,7 +56,7 @@ jobs:
           key: cc-venv-{{ checksum "Pipfile.lock" }}
           paths:
             - ./.venv/
-    
+
       - restore_cache:
           keys:
             - cc-selenium-{{ checksum "./.circleci/selenium.link" }}
