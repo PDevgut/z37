@@ -1,55 +1,46 @@
+import mimetypes
+
 from framework.consts import DIR_STATIC
 
 
 def application(environ, start_response):
-    url = environ['PATH_INFO']
-    if url == "/yyy":
-        status = "200 OK"
-        headers = {
-            "Content-type": "text/css"
-        }
-        payload = read_from_styles_css()
-        start_response(status, list(headers.items()))
-        yield payload
-        if url == "/imggg":
-            status = "200 OK"
-            headers = {
-                "Content-type": "image/jpg"
-            }
-            payload = read_from_bg_img()
-            start_response(status, list(headers.items()))
-            yield payload
-    else:
-        status = "200 OK"
-        headers = {
-            "Content-type": "text/html",
-        }
-        payload = read_from_index_html()
+    url = environ["PATH_INFO"]
 
-        start_response(status, list(headers.items()))
+    file_names = {"/yyy": "styles.css", "/bg.jpg/": "bg.jpg"}
 
-        yield payload
+    file_name = file_names.get(url, "index.html")
 
-def read_from_index_html():
-    path = DIR_STATIC / "index.html"  # Путь
-    with path.open("r") as fp:  # r - режим чтения, Открыть файл
+    status = "200 OK"
+    headers = {"Content-type": mimetypes.MimeTypes().guess_type(file_name)[0]}
+    payload = read_static(file_name)
+    start_response(status, list(headers.items()))
+    yield payload
+
+
+# def read_from_index_html():
+#     path = DIR_STATIC / "index.html"  # Путь
+#     with path.open("r") as fp:  # r - режим чтения, Открыть файл
+#         payload = fp.read()  # Чтение и запись
+#     fp.close()
+#     payload = payload.encode()
+#     return payload
+# def read_from_styles_css():
+#     path = DIR_STATIC / "styles.css"  # Путь
+#     with path.open("r") as fp:  # r - режим чтения, Открыть файл
+#         payload = fp.read()  # Чтение и запись
+#     fp.close()
+#     payload = payload.encode()
+#     return payload
+# def read_from_bg_img():
+#     path = DIR_STATIC / "bg.jpg"  # Путь
+#     with path.open("rb") as fp:  # r - режим чтения, Открыть файл
+#         payload = fp.read()  # Чтение и запись
+#
+#     return payload
+
+
+def read_static(file_name: str) -> bytes:
+    path = DIR_STATIC / file_name  # Путь
+    with path.open("rb") as fp:  # r - режим чтения, Открыть файл
         payload = fp.read()  # Чтение и запись
-    fp.close()
-    payload = payload.encode()
-    return payload
-
-def read_from_styles_css():
-    path = DIR_STATIC / "styles.css"  # Путь
-    with path.open("r") as fp:  # r - режим чтения, Открыть файл
-        payload = fp.read()  # Чтение и запись
-    fp.close()
-    payload = payload.encode()
-    return payload
-
-def read_from_bg_img():
-    path = DIR_STATIC / "bg.jpg"  # Путь
-    with path.open("r") as fp:  # r - режим чтения, Открыть файл
-        payload = fp.read()  # Чтение и запись
-    fp.close()
-    payload = payload.encode()
     return payload

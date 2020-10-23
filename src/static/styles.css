@@ -1,7 +1,10 @@
-div { background-image: url('bg.jpg'); margin: 3%; border: 2px; border-color: black; height: 550px}
+div {  margin: 3%; border: 2px; border-color: black; height: 550px}
 h1 {text-align: center; color: #595c15;}
 hr {border: 0; height: 1px; background: #000;
     background-image: -webkit-linear-gradient(left, #fff, #000, #fff);
     background-image: -moz-linear-gradient(left, #fff, #000, #fff);
     background-image: -ms-linear-gradient(left, #fff, #000, #fff);
     background-image: -o-linear-gradient(left, #fff, #000, #fff);}
+#bg {
+background-image: url('/bg.jpg/');
+}
