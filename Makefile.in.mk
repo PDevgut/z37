@@ -1,7 +1,7 @@
 # -----------------------------------------------
 # independent variables
 
-DIR_VENV := $(shell pipenv --venv 2>/dev/null)
+DIR_VENV := $(shell python -m pipenv --venv 2>/dev/null)
 
 
 # -----------------------------------------------
@@ -37,8 +37,8 @@ PIPENV_INSTALL := echo Cannot create venv under venv
 else
 
 IN_VENV := False
-RUN := pipenv run
-PIPENV_INSTALL := pipenv install
+RUN := python -m pipenv run
+PIPENV_INSTALL := python -m pipenv install
 
 endif
 

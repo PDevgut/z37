@@ -1,3 +1,5 @@
+import mimetypes
+
 from framework.consts import DIR_STATIC
 
 
@@ -6,7 +8,7 @@ def application(environ, start_response):
     if url == "/yyy":
         status = "200 OK"
         headers = {
-            "Content-type": "text/css"
+            "Content-type": mimetypes.MimeTypes().guess_type("styles.css")[0]
         }
         payload = read_from_styles_css()
         start_response(status, list(headers.items()))
@@ -14,7 +16,7 @@ def application(environ, start_response):
     elif url == "/bg.jpg/":
         status = "200 OK"
         headers = {
-            "Content-type": "image/jpeg"
+            "Content-type": "mimetypes.MimeTypes().guess_type(url)[0]"
         }
         payload = read_from_bg_img()
         start_response(status, list(headers.items()))
@@ -22,7 +24,7 @@ def application(environ, start_response):
     else:
         status = "200 OK"
         headers = {
-            "Content-type": "text/html",
+            "Content-type": "mimetypes.MimeTypes().guess_type(index.html)[0]",
         }
         payload = read_from_index_html()
 
