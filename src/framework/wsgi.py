@@ -46,8 +46,9 @@ def read_static(file_name: str) -> bytes:
         payload = fp.read()  # Чтение и запись
     return payload
 
+
 def generate_404(environ) -> bytes:
     url = environ["PATH_INFO"]
-    pin = random.randint(1,1000)
+    pin = random.randint(1, 1000)
     msg = f"Hello world! Your path {url} not found. Pin {pin}"
     return msg.encode()
