@@ -1,46 +1,26 @@
-import mimetypes
+from urllib.parse import parse_qs
 
-from framework.consts import DIR_STATIC
+from framework.types import ResponseT, RequestT
+from handlers.bg import handle_bg
+from handlers.error500 import make_error
+from handlers.handler500 import handle_500
+from handlers.hello import handle_hello
+from handlers.index import handle_index
+from handlers.not_found import handle_404
+from handlers.styles import handle_styles
+
+handle = {"/yyy": handle_styles, "/bg.jpg/": handle_bg, "/": handle_index, "/e": make_error, "/hello": handle_hello}
 
 
 def application(environ, start_response):
-    url = environ["PATH_INFO"]
+    try:
+        url = environ["PATH_INFO"]
+        RequestT.query = parse_qs(environ.get("QUERY_STRING") or ""),
+        handle_name = handle.get(url, handle_404)
+        ResponseT.status, ResponseT.headers, ResponseT.payload = handle_name(environ)
+    except Exception:
+        handle_name = handle_500
+        ResponseT.status, ResponseT.headers, ResponseT.payload = handle_name(environ)
 
-    file_names = {"/yyy": "styles.css", "/bg.jpg/": "bg.jpg"}
-
-    file_name = file_names.get(url, "index.html")
-
-    status = "200 OK"
-    headers = {"Content-type": mimetypes.MimeTypes().guess_type(file_name)[0]}
-    payload = read_static(file_name)
-    start_response(status, list(headers.items()))
-    yield payload
-
-
-# def read_from_index_html():
-#     path = DIR_STATIC / "index.html"  # Путь
-#     with path.open("r") as fp:  # r - режим чтения, Открыть файл
-#         payload = fp.read()  # Чтение и запись
-#     fp.close()
-#     payload = payload.encode()
-#     return payload
-# def read_from_styles_css():
-#     path = DIR_STATIC / "styles.css"  # Путь
-#     with path.open("r") as fp:  # r - режим чтения, Открыть файл
-#         payload = fp.read()  # Чтение и запись
-#     fp.close()
-#     payload = payload.encode()
-#     return payload
-# def read_from_bg_img():
-#     path = DIR_STATIC / "bg.jpg"  # Путь
-#     with path.open("rb") as fp:  # r - режим чтения, Открыть файл
-#         payload = fp.read()  # Чтение и запись
-#
-#     return payload
-
-
-def read_static(file_name: str) -> bytes:
-    path = DIR_STATIC / file_name  # Путь
-    with path.open("rb") as fp:  # r - режим чтения, Открыть файл
-        payload = fp.read()  # Чтение и запись
-    return payload
+    start_response(ResponseT.status, list(ResponseT.headers.items()))
+    yield ResponseT.payload
